@@ -1,0 +1,44 @@
+{
+  "name": "insights-slackbot",
+  "version": "1.0.0",
+  "description": "Slackbot for Red Hat Insights",
+  "homepage": "https://access.redhat.com/insights",
+  "main": "server.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:RedHatInsights/insights-slackbot.git"
+  },
+  "scripts": {
+    "lint": "./node_modules/jscs/bin/jscs app server.js && ./node_modules/jshint/bin/jshint app server.js",
+    "nsp": "./node_modules/nsp/bin/nsp check",
+    "test": "./node_modules/mocha/bin/mocha '**/*.unit.js'",
+    "verify": "npm run lint && npm test && npm run nsp"
+  },
+  "pre-push": [
+    "lint",
+    "nsp",
+    "test"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Jozef Hartinger",
+    "email": "jozef@redhat.com",
+    "url": "https://github.com/jharting"
+  },
+  "dependencies": {
+    "@slack/client": "3.13.0",
+    "bluebird": "^3.5.1",
+    "body-parser": "1.18.2",
+    "bunyan": "1.8.12",
+    "express": "4.16.0",
+    "lodash": "4.17.4"
+  },
+  "devDependencies": {
+    "jscs": "3.0.7",
+    "jshint": "2.9.5",
+    "mocha": "3.5.3",
+    "nsp": "2.8.0",
+    "pre-push": "0.1.1",
+    "should": "13.0.1"
+  }
+}
