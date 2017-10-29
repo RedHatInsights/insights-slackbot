@@ -19,3 +19,5 @@ The following environment variables can be used to tune Insights Slackbot:
 * `SLACK_CHANNEL` - Slack channel the bot will post messages to (insights-webhooks by default)
 * `SERVER_SECRET`- secret part of the URL that prevents unauthorized actors from posting
 * `SERVER_PORT` - server port (3006 by default)
+
+test
