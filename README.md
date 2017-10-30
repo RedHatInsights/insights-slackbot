@@ -4,15 +4,10 @@ Simple [Slack Bot](https://api.slack.com/bot-users) that posts updates about sys
 to a Slack channel.
 
 ## Running
-1. Get a Slack token for the Bot
-1. Run Insights Slackbot
-    ```
-    SLACK_TOKEN='<put token here>' npm start
-    ```
-    The server needs to be accessible from the Internet. Alternatively, use [ultrahook](http://www.ultrahook.com/) to route webhooks to your local machine.
-1. Configure a [webhook in Insights](https://access.redhat.com/insightsbeta/config/webhooks)
 
-## Configuration
+Follow [this tutorial](./tutorial/Tutorial.md) to deploy and set up insights-slackbot.
+
+## Configuration options
 
 The following environment variables can be used to tune Insights Slackbot:
 * `SLACK_TOKEN` - token for authentication
