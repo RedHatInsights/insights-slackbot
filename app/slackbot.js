@@ -17,8 +17,8 @@ exports.start = function () {
     const app = express();
     app.use(bodyParser.json());
 
-    app.post(`/webhook/${config.server.secret}`, handler);
-    app.get(`/webhook/status`, (req, res) => res.status(200).end());
+    app.get(`/status`, (req, res) => res.status(200).end());
+    app.post(`/${config.server.secret}`, handler);
     app.listen(config.server.port, () => {
         log.info(`InsightsSlackbot/${version.commit} listening on http://localhost:${config.server.port}/webhook/${config.server.secret}`);
     });
