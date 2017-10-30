@@ -1,0 +1,148 @@
+apiVersion: v1
+kind: Template
+metadata:
+  name: insights-slackbot
+  annotations:
+    description: "Simple Slack Bot that posts updates about systems monitored by Red Hat Insights to a Slack channel."
+
+parameters:
+- name: SLACK_TOKEN
+  description: "Token for accessing Slack"
+  required: true
+- name: SLACK_CHANNEL
+  description: "Slack channel to post messages to"
+  value: insights-slackbot
+- name: SERVER_TOKEN
+  description: "Secret part of the URL that prevents unauthorized actors from posting"
+  value: ""
+
+objects:
+- apiVersion: v1
+  stringData:
+    token: ${SLACK_TOKEN}
+  kind: Secret
+  metadata:
+    creationTimestamp: null
+    name: slack
+  type: Opaque
+
+- apiVersion: v1
+  kind: ImageStream
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: insights-slackbot
+    name: insights-slackbot
+  spec:
+    lookupPolicy:
+      local: false
+    tags:
+    - from:
+        kind: DockerImage
+        name: docker.io/redhatinsights/insights-slackbot
+      importPolicy: {}
+      name: latest
+      referencePolicy:
+        type: Source
+
+- apiVersion: v1
+  kind: DeploymentConfig
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: insights-slackbot
+    name: insights-slackbot
+  spec:
+    replicas: 1
+    selector:
+      app: insights-slackbot
+      deploymentconfig: insights-slackbot
+    strategy:
+      activeDeadlineSeconds: 21600
+      resources: {}
+      rollingParams:
+        intervalSeconds: 1
+        maxSurge: 25%
+        maxUnavailable: 25%
+        timeoutSeconds: 600
+        updatePeriodSeconds: 1
+      type: Rolling
+    template:
+      metadata:
+        creationTimestamp: null
+        labels:
+          app: insights-slackbot
+          deploymentconfig: insights-slackbot
+      spec:
+        containers:
+        - image: redhatinsights/insights-slackbot:latest
+          imagePullPolicy: Always
+          name: insights-slackbot
+          ports:
+          - containerPort: 3006
+            protocol: TCP
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          env:
+            - name: SLACK_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: slack
+                  key: token
+            - name: SERVER_SECRET
+              value: ${SERVER_TOKEN}
+            - name: SLACK_CHANNEL
+              value: ${SLACK_CHANNEL}
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+    test: false
+    triggers:
+    - type: ConfigChange
+    - imageChangeParams:
+        automatic: true
+        containerNames:
+        - insights-slackbot
+        from:
+          kind: ImageStreamTag
+          name: insights-slackbot:latest
+      type: ImageChange
+
+- apiVersion: v1
+  kind: Service
+  metadata:
+    creationTimestamp: null
+    labels:
+      app: insights-slackbot
+    name: insights-slackbot
+  spec:
+    ports:
+    - name: 3006-tcp
+      port: 3006
+      protocol: TCP
+      targetPort: 3006
+    selector:
+      deploymentconfig: insights-slackbot
+    sessionAffinity: None
+    type: ClusterIP
+
+- apiVersion: v1
+  kind: Route
+  metadata:
+    creationTimestamp: null
+    name: insights-slackbot
+  spec:
+    path: /${SERVER_TOKEN}
+    port:
+      targetPort: 3006-tcp
+    tls:
+      insecureEdgeTerminationPolicy: Redirect
+      termination: edge
+    to:
+      kind: Service
+      name: insights-slackbot
+      weight: 100
+    wildcardPolicy: None
