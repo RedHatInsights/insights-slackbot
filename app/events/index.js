@@ -53,7 +53,7 @@ module.exports = {
         return `:white_check_mark: ${systemLink(r.system)}: ${getProblemDescription(r)} problem resolved: ${ruleLink(r.rule)}`;
     },
 
-    'webhook:ping': function () {
-        return `Test event from Insights`;
+    'webhook:ping': function (msg) {
+        return `Test event from Insights (timestamp: ${msg.timestamp})`;
     }
 };

@@ -8,7 +8,10 @@ describe('Events', function () {
 
     describe('webhook:ping', function () {
         it('produces ping message', function () {
-            events['webhook:ping']().should.equal('Test event from Insights');
+            const date = new Date();
+            events['webhook:ping']({
+                timestamp: date.toISOString()
+            }).should.equal(`Test event from Insights (timestamp: ${date.toISOString()})`);
         });
     });
 
