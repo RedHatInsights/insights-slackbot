@@ -52,4 +52,31 @@ describe('Events', function () {
                 ' (dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320)');
         });
     });
+
+    describe('policy:new', function () {
+        it('produces desired output', function () {
+            const msg = {
+                policy: {
+                    policy_id: 'policy-1',
+                    policy_name: 'Policy 1'
+                }
+            };
+
+            const result = events['policy:new'](msg);
+            result.should.equal('Policy added: *Policy 1* (policy-1)');
+        });
+    });
+
+    describe('policy:new', function () {
+        it('produces desired output', function () {
+            const msg = {
+                policy: {
+                    policy_id: 'policy-1'
+                }
+            };
+
+            const result = events['policy:removed'](msg);
+            result.should.equal('Policy removed: *policy-1*');
+        });
+    });
 });

@@ -55,5 +55,13 @@ module.exports = {
 
     'webhook:ping': function (msg) {
         return `Test event from Insights (timestamp: ${msg.timestamp})`;
+    },
+
+    'policy:new': function (msg) {
+        return `Policy added: *${msg.policy.policy_name}* (${msg.policy.policy_id})`;
+    },
+
+    'policy:removed': function (msg) {
+        return `Policy removed: *${msg.policy.policy_id}*`;
     }
 };
