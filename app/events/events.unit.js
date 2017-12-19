@@ -33,8 +33,8 @@ describe('Events', function () {
             };
 
             const result = events['report:new'](msg);
-            result.should.equal(':exclamation: <https://access.redhat.com/insights/inventory?machine=dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320|rhelbox>' +
-                ': new high severity security problem: <https://access.redhat.com/insights/actions/security/heartbleed%7Cheartbleed|Heartbleed>');
+            result.should.equal(':exclamation: <https://access.redhat.com/insightsbeta/inventory?machine=dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320|rhelbox>' +
+                ': new high severity security problem: <https://access.redhat.com/insightsbeta/actions/security/heartbleed%7Cheartbleed|Heartbleed>');
         });
     });
 
@@ -48,7 +48,7 @@ describe('Events', function () {
             };
 
             const result = events['system:registered'](msg);
-            result.should.equal('System registered: <https://access.redhat.com/insights/inventory?machine=dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320|jozef_vm04>' +
+            result.should.equal('System registered: <https://access.redhat.com/insightsbeta/inventory?machine=dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320|jozef_vm04>' +
                 ' (dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320)');
         });
     });

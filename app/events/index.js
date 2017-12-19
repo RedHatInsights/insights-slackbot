@@ -1,5 +1,8 @@
 'use strict';
 
+const config = require('../config');
+const baseUrl = config.insights.url;
+
 const SEVERITIES = {
     INFO: 'low severity',
     WARN: 'medium severity',
@@ -27,11 +30,11 @@ function getProblemDescription (msg) {
 }
 
 function systemLink (system) {
-    return `<https://access.redhat.com/insights/inventory?machine=${system.system_id}|${system.toString}>`;
+    return `<${baseUrl}/inventory?machine=${system.system_id}|${system.toString}>`;
 }
 
 function ruleLink (rule) {
-    return `<https://access.redhat.com/insights/actions/${rule.category.toLowerCase()}/${encodeURIComponent(rule.rule_id)}|${rule.description}>`;
+    return `<${baseUrl}/actions/${rule.category.toLowerCase()}/${encodeURIComponent(rule.rule_id)}|${rule.description}>`;
 }
 
 module.exports = {

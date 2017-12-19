@@ -16,5 +16,8 @@ module.exports = {
     server: {
         secret: process.env.SERVER_SECRET || '*',
         port: process.env.SERVER_PORT || 3006
+    },
+    insights: {
+        url: process.env.INSIGHTS_URL || 'https://access.redhat.com/insightsbeta'
     }
 };

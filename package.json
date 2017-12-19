@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js app server.js",
     "nsp": "./node_modules/nsp/bin/nsp check",
-    "test": "./node_modules/mocha/bin/mocha '**/*.unit.js'",
+    "test": "SLACK_TOKEN=xoxb123 ./node_modules/mocha/bin/mocha '**/*.unit.js'",
     "verify": "npm run lint && npm test && npm run nsp"
   },
   "pre-push": [
