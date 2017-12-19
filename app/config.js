@@ -19,5 +19,7 @@ module.exports = {
     },
     insights: {
         url: process.env.INSIGHTS_URL || 'https://access.redhat.com/insightsbeta'
-    }
+    },
+
+    here: process.env.ATHERE ? String(process.env.ATHERE).split(',') : []
 };
