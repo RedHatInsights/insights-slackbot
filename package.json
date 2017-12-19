@@ -11,7 +11,7 @@
   "scripts": {
     "lint": "./node_modules/eslint/bin/eslint.js app server.js",
     "nsp": "./node_modules/nsp/bin/nsp check",
-    "test": "SLACK_TOKEN=xoxb123 ./node_modules/mocha/bin/mocha '**/*.unit.js'",
+    "test": "SLACK_TOKEN=xoxb123 ATHERE=system:unregistered ./node_modules/mocha/bin/mocha '**/*.unit.js'",
     "verify": "npm run lint && npm test && npm run nsp"
   },
   "pre-push": [
@@ -31,7 +31,8 @@
     "body-parser": "1.18.2",
     "bunyan": "1.8.12",
     "express": "4.16.0",
-    "lodash": "4.17.4"
+    "lodash": "4.17.4",
+    "sinon": "^4.1.3"
   },
   "devDependencies": {
     "eslint": "^4.11.0",

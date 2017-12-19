@@ -1,7 +1,6 @@
 'use strict';
 
 const config = require('../config');
-const baseUrl = config.insights.url;
 
 const SEVERITIES = {
     INFO: 'low severity',
@@ -30,11 +29,11 @@ function getProblemDescription (msg) {
 }
 
 function systemLink (system) {
-    return `<${baseUrl}/inventory?machine=${system.system_id}|${system.toString}>`;
+    return `<${config.insights.url}/inventory?machine=${system.system_id}|${system.toString}>`;
 }
 
 function ruleLink (rule) {
-    return `<${baseUrl}/actions/${rule.category.toLowerCase()}/${encodeURIComponent(rule.rule_id)}|${rule.description}>`;
+    return `<${config.insights.url}/actions/${rule.category.toLowerCase()}/${encodeURIComponent(rule.rule_id)}|${rule.description}>`;
 }
 
 module.exports = {
@@ -68,3 +67,17 @@ module.exports = {
         return `Policy removed: *${msg.policy.policy_id}*`;
     }
 };
+
+// wrap event processor with @here for certain events configured via ATHERE
+config.here.forEach(event => {
+    const delegate = module.exports[event];
+
+    if (!delegate) {
+        throw new Error(`Invalid event type: ${event}`);
+    }
+
+    module.exports[event] = function (...args) {
+        const result = delegate(...args);
+        return `@here ${result}`;
+    };
+});

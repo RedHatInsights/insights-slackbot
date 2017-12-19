@@ -1,8 +1,9 @@
 /* global describe, it */
 'use strict';
 
-require('should');
+const test = require('../../test');
 const events = require('./');
+const config = require('../config');
 
 describe('Events', function () {
 
@@ -53,6 +54,20 @@ describe('Events', function () {
         });
     });
 
+    describe('system:unregistered', function () {
+        it('produces desired output', function () {
+            const msg = {
+                system: {
+                    system_id: 'dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320',
+                    toString: 'jozef_vm04'
+                }
+            };
+
+            const result = events['system:unregistered'](msg);
+            result.should.equal('@here System unregistered: *jozef_vm04* (dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320)');
+        });
+    });
+
     describe('policy:new', function () {
         it('produces desired output', function () {
             const msg = {
@@ -67,7 +82,7 @@ describe('Events', function () {
         });
     });
 
-    describe('policy:new', function () {
+    describe('policy:removed', function () {
         it('produces desired output', function () {
             const msg = {
                 policy: {
@@ -78,5 +93,24 @@ describe('Events', function () {
             const result = events['policy:removed'](msg);
             result.should.equal('Policy removed: *policy-1*');
         });
+    });
+
+    describe('configuration', function () {
+        it('it uses configured base URL', function () {
+            test.sandbox.stub(config.insights, 'url').value('https://access.redhat.com/insights');
+
+            const msg = {
+                system: {
+                    system_id: 'dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320',
+                    toString: 'jozef_vm04'
+                }
+            };
+
+            const result = events['system:registered'](msg);
+            result.should.equal('System registered: <https://access.redhat.com/insights/inventory?machine=dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320|jozef_vm04>' +
+                ' (dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320)');
+        });
+
+
     });
 });

@@ -14,3 +14,5 @@ The following environment variables can be used to tune Insights Slackbot:
 * `SLACK_CHANNEL` - Slack channel the bot will post messages to (insights-webhooks by default)
 * `SERVER_SECRET`- secret part of the URL that prevents unauthorized actors from posting
 * `SERVER_PORT` - server port (3006 by default)
+* `INSIGHTS_URL` - the base URL of Red Hat Insights. Defaults to https://access.redhat.com/insightsbeta
+* `ATHERE` - comma-separated list of events for which `@here` should be used. None by default
