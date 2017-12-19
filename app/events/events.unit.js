@@ -64,7 +64,7 @@ describe('Events', function () {
             };
 
             const result = events['system:unregistered'](msg);
-            result.should.equal('@here System unregistered: *jozef_vm04* (dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320)');
+            result.should.equal('<!here> System unregistered: *jozef_vm04* (dd18ed75-44f5-4fd1-8ca0-ed08c2d9c320)');
         });
     });
 

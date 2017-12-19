@@ -78,6 +78,6 @@ config.here.forEach(event => {
 
     module.exports[event] = function (...args) {
         const result = delegate(...args);
-        return `@here ${result}`;
+        return `<!here> ${result}`;
     };
 });
