@@ -12,9 +12,12 @@ parameters:
 - name: SLACK_CHANNEL
   description: "Slack channel to post messages to"
   value: insights-slackbot
-- name: SERVER_TOKEN
+- name: SERVER_SECRET
   description: "Secret part of the URL that prevents unauthorized actors from posting"
-  value: ""
+  generate: expression
+  from: "[a-zA-Z0-9]{16}"
+- name: APP_NAME
+  value: "insights-slackbot"
 
 objects:
 - apiVersion: v1
@@ -23,7 +26,7 @@ objects:
   kind: Secret
   metadata:
     creationTimestamp: null
-    name: slack
+    name: ${APP_NAME}-secret
   type: Opaque
 
 - apiVersion: v1
@@ -50,13 +53,13 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      app: insights-slackbot
-    name: insights-slackbot
+      app: ${APP_NAME}
+    name: ${APP_NAME}
   spec:
     replicas: 1
     selector:
-      app: insights-slackbot
-      deploymentconfig: insights-slackbot
+      app: ${APP_NAME}
+      deploymentconfig: ${APP_NAME}
     strategy:
       activeDeadlineSeconds: 21600
       resources: {}
@@ -71,13 +74,13 @@ objects:
       metadata:
         creationTimestamp: null
         labels:
-          app: insights-slackbot
-          deploymentconfig: insights-slackbot
+          app: ${APP_NAME}
+          deploymentconfig: ${APP_NAME}
       spec:
         containers:
         - image: redhatinsights/insights-slackbot:latest
           imagePullPolicy: Always
-          name: insights-slackbot
+          name: ${APP_NAME}
           ports:
           - containerPort: 3006
             protocol: TCP
@@ -88,10 +91,10 @@ objects:
             - name: SLACK_TOKEN
               valueFrom:
                 secretKeyRef:
-                  name: slack
+                  name: ${APP_NAME}-secret
                   key: token
             - name: SERVER_SECRET
-              value: ${SERVER_TOKEN}
+              value: ${SERVER_SECRET}
             - name: SLACK_CHANNEL
               value: ${SLACK_CHANNEL}
         dnsPolicy: ClusterFirst
@@ -105,7 +108,7 @@ objects:
     - imageChangeParams:
         automatic: true
         containerNames:
-        - insights-slackbot
+        - ${APP_NAME}
         from:
           kind: ImageStreamTag
           name: insights-slackbot:latest
@@ -116,8 +119,8 @@ objects:
   metadata:
     creationTimestamp: null
     labels:
-      app: insights-slackbot
-    name: insights-slackbot
+      app: ${APP_NAME}
+    name: ${APP_NAME}
   spec:
     ports:
     - name: 3006-tcp
@@ -125,7 +128,7 @@ objects:
       protocol: TCP
       targetPort: 3006
     selector:
-      deploymentconfig: insights-slackbot
+      deploymentconfig: ${APP_NAME}
     sessionAffinity: None
     type: ClusterIP
 
@@ -133,9 +136,11 @@ objects:
   kind: Route
   metadata:
     creationTimestamp: null
-    name: insights-slackbot
+    labels:
+      app: ${APP_NAME}
+    name: ${APP_NAME}
   spec:
-    path: /${SERVER_TOKEN}
+    path: /${SERVER_SECRET}
     port:
       targetPort: 3006-tcp
     tls:
@@ -143,6 +148,6 @@ objects:
       termination: edge
     to:
       kind: Service
-      name: insights-slackbot
+      name: ${APP_NAME}
       weight: 100
     wildcardPolicy: None
